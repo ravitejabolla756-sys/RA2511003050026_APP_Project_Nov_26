@@ -29,6 +29,7 @@ services:
       VISIONGUARD_EDGE_INGEST_KEY: ${VISIONGUARD_EDGE_INGEST_KEY_HASH:?Set VISIONGUARD_EDGE_INGEST_KEY_HASH in .env}
       VISIONGUARD_CORS_ORIGINS: http://localhost:3000
       VISIONGUARD_PUBLIC_DASHBOARD_URL: http://localhost:3000
+      VISIONGUARD_PUBLIC_LIVE_CAMERA_SOURCE_URL: http://frontend:3000/api/public-live-camera/playlist.m3u8
     ports:
       - "8000:8000"
     depends_on:

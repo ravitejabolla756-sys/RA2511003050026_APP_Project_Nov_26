@@ -95,8 +95,8 @@ def _label(name: str, track_id: int | None, confidence: float) -> str:
 
 
 class TrackingPreviewWorker:
-    def __init__(self, source: Path, camera_key: str):
-        self.source, self.camera_key = source, camera_key
+    def __init__(self, source: Path | str, camera_key: str, live: bool = False):
+        self.source, self.camera_key, self.live = source, camera_key, live
         self.lock = threading.Lock()
         self.inference_lock = threading.Lock()
         self.stop_event = threading.Event()
@@ -122,7 +122,16 @@ class TrackingPreviewWorker:
         self.ai_error = None
         self.roi = ROI_CONFIG.get(camera_key)
         # Elevated wide shots need more pixels to retain distant road users.
-        self.inference_size = int(os.environ.get("SURAKSH_OP_INFERENCE_SIZE", "960")) if camera_key == "OP.mp4" else INFERENCE_SIZE
+        # The public DOT feed is 480x270. Upscaling it to the OP replay size
+        # only increases CPU cost and lowers the refresh rate; it cannot add
+        # detail that is absent from the source. Keep the replay high-res but
+        # run the public feed near its native resolution.
+        if camera_key == "public-iowa-i680":
+            self.inference_size = int(os.environ.get("SURAKSH_PUBLIC_INFERENCE_SIZE", "640"))
+        elif camera_key == "OP.mp4":
+            self.inference_size = int(os.environ.get("SURAKSH_OP_INFERENCE_SIZE", "960"))
+        else:
+            self.inference_size = INFERENCE_SIZE
         self.preview_times: deque[float] = deque(maxlen=100)
         self.ai_times: deque[float] = deque(maxlen=30)
         self.ocr = PreviewOCR()
@@ -148,6 +157,9 @@ class TrackingPreviewWorker:
         return round((len(times)-1)/max(times[-1]-times[0], 0.001), 1) if len(times)>1 else 0.0
 
     def _decode_loop(self) -> None:
+        if self.live:
+            self._decode_live_loop()
+            return
         cap = cv2.VideoCapture(str(self.source))
         if not cap.isOpened():
             with self.lock:
@@ -195,6 +207,62 @@ class TrackingPreviewWorker:
                 self.snapshot["status"] = "DECODE_ERROR"
         finally:
             cap.release()
+
+    def _decode_live_loop(self) -> None:
+        """Decode a configured HLS source continuously and reconnect on outages."""
+        frame_index = -1
+        stream_started = time.monotonic()
+        while not self.stop_event.is_set():
+            try:
+                cap = cv2.VideoCapture(str(self.source), cv2.CAP_FFMPEG, [
+                    cv2.CAP_PROP_OPEN_TIMEOUT_MSEC, 10_000,
+                    cv2.CAP_PROP_READ_TIMEOUT_MSEC, 10_000,
+                ])
+            except (TypeError, cv2.error):
+                cap = cv2.VideoCapture(str(self.source))
+            if not cap.isOpened():
+                cap.release()
+                with self.lock:
+                    self.snapshot["status"] = "SOURCE_UNAVAILABLE"
+                if self.stop_event.wait(2):
+                    break
+                continue
+
+            reported_fps = float(cap.get(cv2.CAP_PROP_FPS) or 0)
+            self.source_fps = reported_fps if 1 <= reported_fps <= 120 else 15.0
+            reconnect = False
+            try:
+                while not self.stop_event.is_set():
+                    ok, frame = cap.read()
+                    if not ok or frame is None:
+                        reconnect = True
+                        break
+                    captured = time.monotonic()
+                    frame_index += 1
+                    source_timestamp = max(captured - stream_started, frame_index / self.source_fps)
+                    self.frame_processed.clear()
+                    with self.lock:
+                        self.latest_frame, self.latest_frame_index = frame, frame_index
+                        self.source_timestamp, self.captured_at = source_timestamp, captured
+                    self.preview_frames += 1
+                    self.preview_times.append(captured)
+            except Exception:
+                log.exception("Live stream decode failed for %s", self.camera_key)
+                reconnect = True
+            finally:
+                cap.release()
+
+            if reconnect and not self.stop_event.is_set():
+                with self.lock:
+                    self.epoch += 1
+                    self.analysis = None
+                    self.latest_frame = None
+                    self.snapshot.update(status="SOURCE_RECONNECTING", objects=[],
+                                         people=None, vehicles=None, cars=None,
+                                         motorcycles=None, buses=None, trucks=None)
+                    epoch = self.epoch
+                self.ocr.reset(epoch)
+                self.stop_event.wait(1)
 
     def _ai_loop(self) -> None:
         model = tracker = None
@@ -313,12 +381,14 @@ class TrackingPreviewWorker:
                     "source_timestamp":analysis.get("source_timestamp") if valid else None,
                     "detection_age_ms":round(age*1000) if valid else None,
                     **counts,"objects":analysis["objects"] if fresh else [],
+                    "detections":analysis["detections"] if fresh else [],
                     **(analysis["observed"] if valid else {}),"status":status,
                     "synthetic_input":self.camera_key.startswith("anpr-"),"plates_blurred":False,
                     "source_fps":self.source_fps,"preview_fps":self._fps(self.preview_times),
+                    "source_width":frame.shape[1],"source_height":frame.shape[0],
                     "ai_fps":ai_fps,"ai_frames":self.ai_frames,
                     "inference_size":self.inference_size,"model":MODEL_PATH.stem,
-                    "playback_mode":"analysis-paced replay" if self.synchronized_replay else "realtime replay",
+                    "playback_mode":"live stream" if self.live else "analysis-paced replay" if self.synchronized_replay else "realtime replay",
                     "inference_ms":round(analysis["inference_ms"],1) if valid else None,
                     "device":analysis["device"] if valid else "CPU","frame_drops":self.frame_drops,
                     "playback_drops":self.playback_drops,"ai_error":self.ai_error,
@@ -353,13 +423,13 @@ class TrackingPreviewManager:
         self._workers = {}
         self._lock = threading.Lock()
 
-    def worker(self,source:Path,camera_key:str) -> TrackingPreviewWorker:
+    def worker(self,source:Path | str,camera_key:str,live:bool=False) -> TrackingPreviewWorker:
         with self._lock:
             worker = self._workers.get(camera_key)
-            if worker is None or worker.source!=source:
+            if worker is None or worker.source!=source or worker.live!=live:
                 if worker:
                     worker.stop_event.set()
-                worker = TrackingPreviewWorker(source,camera_key)
+                worker = TrackingPreviewWorker(source,camera_key,live)
                 self._workers[camera_key] = worker
             worker.start()
             return worker

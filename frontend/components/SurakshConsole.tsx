@@ -16,7 +16,7 @@ export type View = "dashboard" | "registry" | "gis" | "viewer" | "analytics" | "
 type Session = { access_token: string; user: User };
 
 const nav: Array<[View, string, typeof Shield]> = [
-  ["dashboard", "Operations", Activity], ["registry", "CCTV Registry", Database], ["gis", "Gujarat GIS", Map], ["viewer", "Unified Viewer", Radio], ["investigations", "Investigations", Search], ["watchlists", "Watchlists", Siren], ["integrations", "Federation", Wifi], ["health", "Camera Health", CameraIcon], ["audit", "Audit Log", FileText], ["settings", "Settings", Shield]
+  ["dashboard", "Operations", Activity], ["registry", "CCTV Registry", Database], ["viewer", "Unified Viewer", Radio], ["investigations", "Investigations", Search], ["watchlists", "Watchlists", Siren], ["integrations", "Federation", Wifi], ["health", "Camera Health", CameraIcon], ["audit", "Audit Log", FileText], ["settings", "Settings", Shield]
 ];
 nav.splice(4, 0, ["analytics", "Traffic Analytics", BarChart3]);
 nav.splice(6, 0, ["alerts", "Alerts", Siren]);
@@ -78,12 +78,11 @@ export function SurakshConsole({ view }: { view: View }) {
   return <main className="surakshApp">
     <aside className="surakshSidebar">
       <Link className="surakshBrand" href="/"><span className="brandMark">S</span><span><strong>SURAKSH</strong><small>Federating CCTV. Connecting Intelligence.</small></span></Link>
-      <div className="demoBanner">HACKATHON DEMO<br /><span>All records are synthetic</span></div>
       <nav>{nav.map(([key, label, Icon]) => <a className={view === key ? "active" : ""} href={key === "dashboard" ? "/" : `/${key}`} key={key}><Icon size={17} />{label}</a>)}</nav>
       <button className="sidebarLogout" onClick={() => { window.localStorage.removeItem("suraksh-session"); setSession(null); }}><Archive size={16} /> Sign out</button>
     </aside>
     <section className="surakshMain">
-      <header className="surakshTopbar"><div><span className="sectionKicker">GUJARAT POLICE HACKATHON 2026</span><h1>{nav.find(([key]) => key === view)?.[1] ?? "Operations"}</h1></div><div className="topbarMeta"><span className="statusDot">{error ? "API ERROR" : loading ? "CONNECTING" : "API CONNECTED"}</span><span>{session.user.name}</span></div></header>
+      <header className="surakshTopbar"><div><h1>{nav.find(([key]) => key === view)?.[1] ?? "Operations"}</h1></div><div className="topbarMeta"><span className="statusDot">{error ? "API ERROR" : loading ? "CONNECTING" : "API CONNECTED"}</span><span>{session.user.name}</span></div></header>
       {error ? <div className="errorBanner"><AlertTriangle size={16} />{error}<button onClick={() => loadData(session.access_token)}><Wifi size={14} /> Retry</button></div> : null}
       {loading ? <div className="loadingBanner">Syncing registry and event metadata…</div> : null}
       {view === "dashboard" ? <Dashboard summary={summary} cameras={cameras} detections={detections} gap={gap} onCamera={setSelectedCamera} /> : null}

@@ -3,6 +3,7 @@ __pycache__/
 *.tsbuildinfo
 .pytest_cache/
 .env
+.env.local
 visionguard.db
 *-migration.db
 *.db

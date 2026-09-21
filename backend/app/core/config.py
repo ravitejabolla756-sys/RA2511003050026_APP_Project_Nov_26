@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     demo_mode: bool = True
     demo_runtime_only: bool = False
     demo_media_dir: str = ""
+    public_live_camera_source_url: str = "http://127.0.0.1:3000/api/public-live-camera/playlist.m3u8"
     postgis_enabled: bool = False
 
     @property

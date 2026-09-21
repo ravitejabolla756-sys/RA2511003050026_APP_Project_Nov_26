@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import alert_rules, analytics, auth, cameras, events, leads, notifications, users
-from app.api import audit, detections, registry, realtime, demo_media, safety_incidents
+from app.api import audit, detections, registry, realtime, demo_media, public_camera, safety_incidents
 from app.core.config import get_settings
 from app.models.database import SessionLocal
 from app.services.seed import seed_demo
@@ -49,6 +49,7 @@ app.include_router(registry.router)
 app.include_router(audit.router)
 app.include_router(realtime.router)
 app.include_router(demo_media.router)
+app.include_router(public_camera.router)
 app.include_router(safety_incidents.router)
 
 

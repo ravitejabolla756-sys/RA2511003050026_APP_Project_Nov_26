@@ -42,9 +42,14 @@ def test_realtime_preview_publishes_frame_matched_analysis():
     result = observation()
     result.update(at=time.monotonic(), epoch=0, inference_ms=10, device='CPU')
     worker._publish(frame,10,result)
-    assert worker.latest()[2]['vehicles'] == 2
-    assert worker.latest()[2]['playback_mode'] == 'realtime replay'
-    assert worker.latest()[2]['detection_frame'] == 10
+    snapshot = worker.latest()[2]
+    assert snapshot['vehicles'] == 2
+    assert snapshot['playback_mode'] == 'realtime replay'
+    assert snapshot['detection_frame'] == 10
+    assert snapshot['source_width'] == 120
+    assert snapshot['source_height'] == 80
+    assert len(snapshot['detections']) == 2
+    assert snapshot['detections'][0]['box'] == [5, 20, 60, 60]
 
 
 def test_empty_scene_is_zero_and_stale_scene_is_unknown():

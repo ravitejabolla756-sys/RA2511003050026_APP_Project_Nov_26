@@ -14,6 +14,45 @@
 @media (max-width:600px) { .viewerGrid,.cameraMiniGrid { grid-template-columns:1fr; }.toolbar { flex-wrap:wrap; }.toolbar input { min-width:100%; }.toolbar select { flex:1; max-width:none; }.ratioRow { grid-template-columns:1fr; }.ratioRow .metric { display:flex; justify-content:space-between; align-items:center; }.searchHero { flex-wrap:wrap; }.searchHero input { flex-basis:calc(100% - 35px); }.searchHero span { white-space:normal; }.surakshTopbar h1 { font-size:25px; } }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; animation-iteration-count:1!important; } }
 .streamFrame { position:relative; }
+.publicCameraSection { display:grid; gap:12px; margin-top:18px; }
+.publicCameraHeader { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:12px; }
+.publicCameraHeader h2 { margin:4px 0 0; font-size:19px; }
+.publicCameraHeader p:not(.eyebrow) { color:var(--muted); font-size:11px; line-height:1.5; margin:6px 0 0; }
+.publicCameraHeader .eyebrow { margin:0; color:var(--accent); font:10px 'IBM Plex Mono',monospace; letter-spacing:.1em; }
+.liveStreamStatus { display:inline-flex; align-items:center; gap:7px; flex:0 0 auto; padding:6px 8px; border:1px solid var(--line); color:var(--muted); font:10px 'IBM Plex Mono',monospace; }
+.liveStreamStatus i { width:7px; height:7px; border-radius:50%; background:#f59e0b; }
+.publicCameraStatuses { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.liveStreamStatus.live,.liveStreamStatus.tracking { color:#34d399; }
+.liveStreamStatus.live i,.liveStreamStatus.tracking i { background:#34d399; }
+.liveStreamStatus.source-unavailable,.liveStreamStatus.ai-error,.liveStreamStatus.disconnected { color:#fca5a5; }
+.liveStreamStatus.source-unavailable i,.liveStreamStatus.ai-error i,.liveStreamStatus.disconnected i { background:#f87171; }
+.publicLivePlayer { position:relative; overflow:hidden; border:1px solid var(--line); background:#020508; aspect-ratio:16/9; min-height:240px; }
+.publicLivePlayer img { display:block; width:100%; height:100%; object-fit:contain; background:#020508; }
+.publicLivePlayer video { display:block; width:100%; height:100%; object-fit:contain; background:#020508; }
+.publicLivePlayer > .trackingOverlayCanvas { position:absolute; z-index:2; inset:0; width:100%; height:100%; pointer-events:none; }
+.publicLiveOverlay { position:absolute; inset:0; display:grid; place-items:center; padding:20px; color:#cbd5e1; background:#020508; text-align:center; font-size:13px; pointer-events:none; }
+.publicLiveFooter { display:flex; align-items:center; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:10px; }
+.publicLiveFooter span { margin-right:auto; }
+.publicLiveFooter a { color:var(--blue); text-decoration:underline; text-underline-offset:3px; }
+.publicLiveControls { display:flex; align-items:center; gap:14px; flex-wrap:wrap; color:#cbd5e1; font-size:11px; }
+.publicLiveControls label { display:inline-flex; align-items:center; gap:5px; }
+.publicLiveControls input { accent-color:#34d399; }
+.publicLiveControls small { margin-left:auto; color:var(--muted); font:9px 'IBM Plex Mono',monospace; }
+.publicCameraMetrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px 12px; padding:12px; border:1px solid var(--line); background:var(--panel); color:var(--text); font:10px/1.5 'IBM Plex Mono',monospace; }
+.publicCameraMetrics > b,.publicCameraMetrics > small,.publicCameraMetrics > em,.liveTrackList { grid-column:1/-1; }
+.publicCameraMetrics > b { color:var(--accent); }
+.publicCameraMetrics > small,.publicCameraMetrics > em { color:var(--muted); }
+.publicCameraMetrics > em { font-style:normal; }
+.liveTrackList { display:flex; gap:7px; flex-wrap:wrap; }
+.liveTrackList span { padding:3px 6px; border:1px solid var(--line); color:var(--blue); }
+.trackingVideoSurface { position:relative; width:100%; line-height:0; background:#020508; }
+.trackingVideoSurface video { display:block; width:100%; height:auto; min-height:0; object-fit:contain; background:#020508; }
+.trackingVideoSurface > .trackingOverlayCanvas { position:absolute; z-index:2; inset:0; width:100%; height:100%; pointer-events:none; }
+@media (max-width:600px) { .publicCameraHeader { flex-direction:column; }.publicCameraStatuses { justify-content:flex-start; }.publicLivePlayer { min-height:190px; }.publicLiveFooter { align-items:flex-start; flex-direction:column; }.publicLiveFooter span { margin:0; }.publicLiveControls small { margin-left:0; } }
+.trackingLegend { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:7px 12px 2px; color:var(--muted); font:10px/1.4 'IBM Plex Mono',monospace; }
+.trackingLegend span { display:inline-flex; align-items:center; gap:5px; }
+.trackingLegend i { width:9px; height:9px; display:inline-block; border:1px solid #ffffff66; }
+.trackingLegend em { color:var(--muted); font-style:normal; margin-left:auto; }
 .analyticsOverlay { position:static; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 12px; margin:4px 12px 12px; padding:12px; background:var(--panel); border:1px solid var(--line); color:var(--text); text-align:left; overflow-wrap:anywhere; font:10px/1.5 'IBM Plex Mono',monospace; }
 .analyticsOverlay b { grid-column:1/3; color:var(--accent); }
 .analyticsOverlay em { grid-column:1/3; color:var(--muted); font-style:normal; font-size:9px; }
