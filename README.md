@@ -212,3 +212,23 @@ The repository identifies the Ultralytics detector integration as AGPL-3.0-or-la
 ## Disclaimer
 
 SURAKSH is currently an academic/development project and should not be treated as a production safety system until real-world validation, reliability testing and operational acceptance are completed.
+
+## Project Output Screenshots
+
+These captures document the SURAKSH safety-evaluation, fire-detection, and real-time incident-alert interfaces. Phone numbers and one-time passwords visible in the alert capture have been redacted for public repository use.
+
+### Accident detection and tracking
+
+![SURAKSH accident detection and tracking](screenshots/safety-evaluation-accident.png)
+
+### Fire detection from CCTV footage
+
+![SURAKSH fire detection from CCTV footage](screenshots/safety-evaluation-fire-cctv.png)
+
+### Confirmed fire evaluation
+
+![SURAKSH confirmed fire evaluation](screenshots/safety-evaluation-fire-confirmed.png)
+
+### Real-time incident alerts
+
+![SURAKSH real-time incident alerts](screenshots/alerts-incident-proof.png)
