@@ -4,6 +4,31 @@
 
 > SURAKSH is an academic and development project. It is not a production safety system until real-world validation, reliability testing and operational acceptance are complete.
 
+## Academic project details
+
+| Field | Information |
+| --- | --- |
+| Course ID | 21CSC203P |
+| Course Name | Advanced Programming Practice |
+| Project Title | SURAKSH – AI-Powered Intelligent CCTV Safety & Security Monitoring System |
+| Department | Computer Science and Engineering (CSE) |
+| Section | A |
+| Academic Year | II Year B.Tech (2026–2027) |
+| Institution | SRM Institute of Science and Technology, Tiruchirappalli |
+
+### Team members
+
+| S. No. | Full Name | Register Number | Department | Section | Academic Year |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Bolla Raviteja | RA2511003050026 | Computer Science and Engineering | A | II Year (2026–2027) |
+| 2 | D. Praneeth | RA2511003050028 | Computer Science and Engineering | A | II Year (2026–2027) |
+| 3 | Bandaru Maheeth | RA2511003050488 | Computer Science and Engineering | A | II Year (2026–2027) |
+
+### Mentor details
+
+- **Mentor's Full Name:** Dr. L. Josephine Usha
+- **Designation:** Assistant Professor, Department of Computer Science and Engineering
+
 ## Project status
 
 | Area | Current status |
