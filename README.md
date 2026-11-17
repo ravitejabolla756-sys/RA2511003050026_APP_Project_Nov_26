@@ -29,6 +29,12 @@
 - **Mentor's Full Name:** Dr. L. Josephine Usha
 - **Designation:** Assistant Professor, Department of Computer Science and Engineering
 
+### APP subject faculty
+
+- **Faculty Name:** Dr. S. Shargunam
+- **Designation:** Assistant Professor, Department of Computer Science and Engineering
+- **Subject:** 21CSC203P – Advanced Programming Practice
+
 ## Project status
 
 | Area | Current status |
@@ -156,7 +162,7 @@ CC/
 Verified local requirements are Python with backend dependencies, Node.js with frontend dependencies, and Docker Desktop for the full compose topology.
 
 ~~~powershell
-git clone https://github.com/ravitejabolla756-sys/Suraksh.git
+git clone https://github.com/ravitejabolla756-sys/RA2511003050026_APP_Project_Nov_26.git
 cd Suraksh
 Copy-Item .env.example .env
 # Replace development placeholders in .env with local values.
