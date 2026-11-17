@@ -33,14 +33,16 @@
 
 | Area | Current status |
 | --- | --- |
-| Control-room frontend | Implemented development console |
-| Backend API, authentication and RBAC | Implemented foundation |
-| Camera registry, VMS metadata and audit log | Implemented with synthetic demo seed |
-| Person and vehicle detection | Implemented foundation; under validation |
-| Anonymous tracking and counting | Implemented foundation; scene dependent |
-| Fire, smoke and accident reasoning | Experimental / under development |
-| Number-plate intelligence | Partial modular foundation; OCR evaluation remains environment dependent |
-| Production readiness | Not accepted |
+| Control-room frontend | Implemented |
+| Backend API, authentication and RBAC | Implemented |
+| Camera registry, VMS metadata and audit log | Implemented |
+| Person and vehicle detection | Implemented |
+| Anonymous tracking and counting | Implemented |
+| Fire, smoke and accident reasoning | Implemented |
+| Number-plate recognition (ANPR/OCR) | Implemented |
+| Production readiness | Not yet validated for real-world deployment |
+
+**Status note:** “Implemented” indicates the feature is available in the project's development/demo workflow, as reported by the project team. It does not mean independently verified accuracy, reliability or production certification.
 
 ## Why SURAKSH?
 
@@ -94,7 +96,7 @@ SURAKSH uses anonymous, session-local track identifiers and keeps camera streams
 
 ## Safety intelligence
 
-Fire and smoke paths use specialist candidate detection with temporal confirmation contracts. Accident reasoning combines trajectory, motion, interaction and temporal evidence. A single frame is not sufficient evidence for reliable accident confirmation. These capabilities are marked Experimental, Under Development or Under Validation in the source documentation and are not represented as production-ready detectors.
+The project team reports that fire detection, smoke detection and accident reasoning have been implemented and are working in the development/demo workflow. Fire and smoke paths use candidate detection and temporal confirmation; accident reasoning combines trajectory, motion, interaction and temporal evidence. These implementations still require independently measured accuracy, false-alarm and real-world reliability validation before production use.
 
 ## Vehicle intelligence
 
@@ -105,7 +107,7 @@ Vehicle detection → Vehicle tracking → Plate detection → Quality gate
 → Crop/enhancement → Replaceable OCR → Validation → Multi-frame consensus
 ~~~
 
-The contracts, quality gate, validation and temporal-fusion foundation are present in backend/app/anpr. Detector and OCR providers remain replaceable; environment-dependent OCR availability and annotated evaluation are still pending. SURAKSH does not identify vehicle owners.
+The project team reports that number-plate recognition is implemented and working in the development/demo workflow. The recognition pipeline and its components reside in backend/app/anpr, with replaceable detector and OCR providers. OCR performance remains dependent on the runtime environment, and annotated accuracy evaluation is still pending. SURAKSH does not identify vehicle owners.
 
 ## Backend platform
 
@@ -184,20 +186,20 @@ The local demo covers the control-room dashboard, synthetic camera registry, GIS
 
 | Capability | Status |
 | --- | --- |
-| Organizations, authentication and RBAC | Implemented foundation |
+| Organizations, authentication and RBAC | Implemented |
 | Camera and VMS metadata management | Implemented |
 | RTSP and HLS foundations | Partial; environment dependent |
-| Person detection | Implemented foundation; under validation |
-| Vehicle detection | Implemented foundation; under validation |
-| Anonymous tracking | Implemented foundation |
-| Counting and line/zone concepts | Partial / under validation |
-| Fire and smoke | Experimental |
-| Accident reasoning | Under development |
-| Number plates | Partial modular foundation |
+| Person detection | Implemented |
+| Vehicle detection | Implemented |
+| Anonymous tracking | Implemented |
+| Counting and line/zone concepts | Implemented (demo; accuracy validation pending) |
+| Fire and smoke | Implemented (demo; accuracy validation pending) |
+| Accident reasoning | Implemented (demo; accuracy validation pending) |
+| Number-plate recognition (ANPR/OCR) | Implemented (demo; OCR validation pending) |
 | Recording, retention and playback | Replay foundation; production retention pending |
-| Search, incidents and alerts | Implemented foundation |
-| Notifications and auditability | Implemented foundation |
-| Runtime telemetry | Implemented foundation |
+| Search, incidents and alerts | Implemented |
+| Notifications and auditability | Implemented |
+| Runtime telemetry | Implemented |
 | NVIDIA acceleration | Environment/configuration dependent |
 | OpenVINO | Not established as a current default |
 | Live video wall | Partial local viewer |
@@ -210,7 +212,7 @@ The repository contains backend and Edge AI Pytest suites, frontend TypeScript a
 
 ## Roadmap
 
-Current work proceeds from the implemented control-room and perception foundations toward stronger detector and tracker validation, occlusion recovery, motion prediction, fire and smoke confirmation, accident evidence, number-plate detection/OCR, evidence clips, timeline search, advanced analytics, multi-camera operations, soak testing and real-world acceptance.
+Current work focuses on validation and refinement of the implemented control-room, detection, tracking, fire/smoke, accident reasoning and number-plate recognition features. Priorities include annotated accuracy testing, occlusion recovery, motion prediction, more reliable event confirmation, improved OCR performance, evidence clips, timeline search, advanced analytics, multi-camera operations, soak testing and real-world acceptance.
 
 ## Security
 
