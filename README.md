@@ -26,7 +26,7 @@
 
 ### Mentor details
 
-- **Mentor's Full Name:** Dr. L. Josephine Usha
+- **Mentor's Full Name:** Dr. S. Shargunam
 - **Designation:** Assistant Professor, Department of Computer Science and Engineering
 
 ### APP subject faculty
